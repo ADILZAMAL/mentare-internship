@@ -6,7 +6,7 @@ export default function Landing() {
   return (
     <Grid container direction="column">
       <Grid item>
-        <Navbar />
+        <Navbar landing/>
       </Grid>
       <Grid item style={{ height: 'calc(100vh - 90px)', backgroundColor: '#3f37c9'}}>
         <Box p={10} style={{height: 'inherit'}}>

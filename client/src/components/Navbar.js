@@ -53,7 +53,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Navbar() {
+export default function Navbar({landing}) {
   const classes = useStyles();
 
   return (
@@ -81,12 +81,15 @@ export default function Navbar() {
             <Button color="inherit" className={classes.buttonFontSize}>
               NEWS
             </Button>
-
-            <Link to="/home">
-              <Button color="inherit" className={classes.portal}>
-                PORTAL
-              </Button>
-            </Link>
+            {
+              landing&&(
+                <Link to="/home">
+                  <Button color="inherit" className={classes.portal}>
+                    PORTAL
+                  </Button>
+                </Link>
+              )
+            }
           </Toolbar>
         </Grid>
       </AppBar>
