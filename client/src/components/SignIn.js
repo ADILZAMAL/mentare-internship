@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -13,20 +12,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Divider } from '@material-ui/core';
-
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import {Link, Redirect, withRouter} from 'react-router-dom'
+import axios from 'axios'
+import {toast} from 'react-toastify'
 
 const useStyles = makeStyles((theme) => ({
     container:{
@@ -61,9 +49,39 @@ signUp:{
   }
 }));
 
-export default function SignIn({title, buttonText}) {
+function SignIn({title, buttonText, role, ...props}) {
   const classes = useStyles();
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
 
+  const login = (e) => {
+    e.preventDefault();
+       axios({
+        method: 'post',
+        url: 'http://localhost:5000/api/auth/signin',
+        data:{
+          username: userName,
+          password
+        }
+      }).then(({data})=>{
+        if(data.accessToken){
+          localStorage.setItem('user', JSON.stringify(data))
+          props.history.push(data.role.name === 'vendor' ? '/vendor': '/advertiser')
+        }
+      })
+      .catch(({request})=>{
+        toast.error(JSON.parse(request.response).message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          });
+      })
+    
+  }
   return (
     <Container component="main" maxWidth="xs"  className={classes.container}>
       <CssBaseline />
@@ -71,18 +89,19 @@ export default function SignIn({title, buttonText}) {
         <Typography  variant="subtitle2" align="center">
          {title}
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={login}>
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>{buttonText}</Button>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="userName"
+            label="User Name"
+            name="userName"
             autoFocus
+            value={userName}
+            onChange={e=>setUserName(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -94,6 +113,8 @@ export default function SignIn({title, buttonText}) {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={e=>setPassword(e.target.value)}
           />
           <Typography align="center" variant="subtitle2">
               Forgot password?
@@ -104,12 +125,13 @@ export default function SignIn({title, buttonText}) {
           </Typography>
           <Grid container justifyContent="center" >
             <Button
-                type="submit"
                 variant="outlined"
                 color="primary"
                 className={classes.signUp}
             >
-                Sign Up
+              <Link to={`/signup/${role}`}>
+                  Sign Up
+              </Link>
             </Button>
           </Grid>
           <Typography  variant="subtitle1" align="center" style={{fontWeight: 600}}>
@@ -123,3 +145,5 @@ export default function SignIn({title, buttonText}) {
     </Container>
   );
 }
+
+export default withRouter(SignIn)

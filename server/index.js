@@ -7,10 +7,10 @@ require("dotenv").config()
 const app = express()
 
 var corsOptions = {
-    origin: "http://localhost:8081"
+    origin: "http://localhost:3000"
 }
 
-app.use(cors(corsOptions))
+app.use(cors())
 
 app.use(express.json())
 
@@ -40,7 +40,7 @@ db.mongoose.connect(URI, {
     initial();
 })
 .catch(err=>{
-    console.log("Connection error", error)
+    console.log("Connection error", err)
     process.exit()
 })
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -13,8 +13,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { Button } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 
+import logout from '../utils/logout';
 import AddIcon from '@material-ui/icons/Add';
 
 
@@ -47,9 +48,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ClippedDrawer() {
+ function ClippedDrawer(props) {
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -77,11 +77,15 @@ export default function ClippedDrawer() {
         <Toolbar />
         <div className={classes.drawerContainer}>
           <List>
-            {['Dashboard', 'Campaigns', 'Reports', 'Media Library', 'Client Info', 'Optimization', 'Billing', 'Account', 'Logout'].map((text, index) => (
+            {['Dashboard', 'Campaigns', 'Reports', 'Media Library', 'Client Info', 'Optimization', 'Billing', 'Account'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemText primary={text} />
               </ListItem>
             ))}
+              <ListItem button onClick={()=>{
+                logout(props)}}>
+                <ListItemText primary="Logout"/>
+              </ListItem>
           </List>
         </div>
       </Drawer>
@@ -115,3 +119,6 @@ export default function ClippedDrawer() {
     </div>
   );
 }
+
+
+export default withRouter(ClippedDrawer)

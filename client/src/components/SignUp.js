@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,20 +13,11 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Divider } from '@material-ui/core';
+import axios from 'axios'
+import { withRouter } from 'react-router-dom';
+import {toast} from 'react-toastify'
 
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
     container:{
@@ -61,17 +52,57 @@ signUp:{
   }
 }));
 
-export default function SignIn({role}) {
+function SignUp({role, ...props}) {
   const classes = useStyles();
+  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
 
+  const signUpHandler = (e) => {
+    e.preventDefault();
+     axios({
+      method:'post', 
+      url:'http://localhost:5000/api/auth/signup',
+      data:{
+        username: userName,
+        email,
+        password,
+        role
+      }
+    }).then(({data})=>{
+      console.log(data)
+      toast.success('User Registered successfully', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+      props.history.push('/home')
+    })
+    .catch(({request})=>{
+      toast.error(JSON.parse(request.response).message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+    })
+
+  }
   return (
     <Container component="main" maxWidth="xs"  className={classes.container}>
       <CssBaseline />
       <div className={classes.paper}>
         <Typography  variant="subtitle2" align="center">
-         {`SIGN UP | ${role}`}
+         {`SIGN UP | ${role.toUpperCase() }`}
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={signUpHandler}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -81,7 +112,8 @@ export default function SignIn({role}) {
               label="User Name"
               type="text"
               id="userName"
-            //   autoComplete="current-password"
+              value={userName}
+              onChange={e=>setUserName(e.target.value)}
             />
           <TextField
             variant="outlined"
@@ -91,8 +123,9 @@ export default function SignIn({role}) {
             id="email"
             label="Email Address"
             name="email"
-            autoComplete="email"
             autoFocus
+            value={email}
+            onChange={e=>setEmail(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -103,7 +136,8 @@ export default function SignIn({role}) {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
+            value={password}
+            onChange={e=>setPassword(e.target.value)}
           />
           <Box mb={3}>
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>SIGN UP</Button>
@@ -113,3 +147,5 @@ export default function SignIn({role}) {
     </Container>
   );
 }
+
+export default withRouter(SignUp)

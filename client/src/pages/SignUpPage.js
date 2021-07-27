@@ -3,8 +3,10 @@ import SignIn from '../components/SignIn'
 import Navbar from '../components/Navbar';
 import { Box, Divider, Grid } from '@material-ui/core';
 import SignUp from '../components/SignUp'
+import {useParams, withRouter} from 'react-router-dom'
 
-export default function Home() {
+function SignUpPage(props) {
+    const {role} = useParams()
     return (
         <Grid container direction="column">
             <Grid item>
@@ -14,7 +16,7 @@ export default function Home() {
                 <Box p={5} style={{ height: 'inherit'}}>
                     <Grid container justifyContent="center" style={{ height: '100%'}}>
                         <Grid xs={6} item container justifyContent="center" alignItems="center" >
-                            <SignUp role="VENDOR"/>
+                            <SignUp role={role}/>
                         </Grid>
                         
                     </Grid>
@@ -23,3 +25,5 @@ export default function Home() {
         </Grid>
     )
 }
+
+export default withRouter(SignUpPage)

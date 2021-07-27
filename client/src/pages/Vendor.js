@@ -13,8 +13,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { Button } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
+import logout from '../utils/logout'
 import AddIcon from '@material-ui/icons/Add';
 
 
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ClippedDrawer() {
+ function Vendor(props) {
   const classes = useStyles();
 
   return (
@@ -77,11 +78,14 @@ export default function ClippedDrawer() {
         <Toolbar />
         <div className={classes.drawerContainer}>
           <List>
-            {['Dashboard', 'Inventory Status', 'Live Campaigns' , 'Inventory Utility','Finances', 'Account', 'Logout'].map((text, index) => (
+            {['Dashboard', 'Inventory Status', 'Live Campaigns' , 'Inventory Utility','Finances', 'Account'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemText primary={text} />
               </ListItem>
             ))}
+              <ListItem button onClick={()=>logout(props)}>
+                <ListItemText primary='Logout' />
+              </ListItem>
           </List>
         </div>
       </Drawer>
@@ -115,3 +119,6 @@ export default function ClippedDrawer() {
     </div>
   );
 }
+
+
+export default withRouter(Vendor)

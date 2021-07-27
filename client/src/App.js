@@ -6,23 +6,23 @@ import Landing from './pages/Landing';
 import Advertiser from './pages/Advertiser';
 import Vendor from './pages/Vendor';
 import PrivateRoute from './components/PrivateRoute';
-import SignUp from './pages/SignUp';
+import SignUpPage from './pages/SignUpPage';
 
-const Test = () =>{
-  return(
-    <h1>This is private route</h1>
-  )
-}
+import { ToastContainer } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
+ 
   return (
     <Router>
+      <ToastContainer />
       <Switch>
-        <Route exact path="/" ><Landing/></Route>
-        <Route path="/home" ><Home/></Route>
-        <Route path="/signup" ><SignUp /></Route>
-        <PrivateRoute path="/advertiser" component={Advertiser} />
-        <PrivateRoute path="/vendor" component={Vendor} />
-        <PrivateRoute path="/private" component={Test } />
+        <Route exact path="/" component={Landing} />
+        <Route path="/home" component={Home} />
+        <Route path="/signup/:role" component={SignUpPage} />
+        <PrivateRoute path="/advertiser" role="advertiser" component={Advertiser} />
+        <PrivateRoute path="/vendor" role="vendor" component={Vendor} />
 
       </Switch>
     </Router>
