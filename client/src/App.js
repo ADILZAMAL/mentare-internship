@@ -6,6 +6,7 @@ import Landing from './pages/Landing';
 import Advertiser from './pages/Advertiser';
 import Vendor from './pages/Vendor';
 import PrivateRoute from './components/PrivateRoute';
+import SignUp from './pages/SignUp';
 
 const Test = () =>{
   return(
@@ -18,9 +19,11 @@ function App() {
       <Switch>
         <Route exact path="/" ><Landing/></Route>
         <Route path="/home" ><Home/></Route>
+        <Route path="/signup" ><SignUp /></Route>
         <PrivateRoute path="/advertiser" component={Advertiser} />
         <PrivateRoute path="/vendor" component={Vendor} />
         <PrivateRoute path="/private" component={Test } />
+
       </Switch>
     </Router>
   );
